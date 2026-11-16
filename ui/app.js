@@ -121,7 +121,12 @@ function cardBase(account, tags) {
   const title = node("h3", "account-name", name);
   title.title = name;
   const tagList = node("div", "tags");
-  for (const [className, text] of tags) if (text) tagList.append(node("span", `tag ${className}`, text));
+  for (const [className, text, hint] of tags) {
+    if (!text) continue;
+    const tag = node("span", `tag ${className}`, text);
+    if (hint) tag.title = hint;
+    tagList.append(tag);
+  }
   identity.append(title);
 
   const freshness = node("span", "freshness");
@@ -151,9 +156,19 @@ function appendError(card, account) {
 function quotaCard(account) {
   const plan = account.plan ? account.plan[0].toUpperCase() + account.plan.slice(1) : "";
   const kind = account.kind === "plan" ? "密钥套餐" : account.kind === "unknown" ? "类型待确认" : "订阅";
-  const card = cardBase(account, [
-    ["channel", channelName(account.provider)], [account.kind === "unknown" ? "unclassified" : "type", kind], ["plan", plan], ["", account.from],
-  ]);
+  const tags = [
+    ["channel", channelName(account.provider)], [account.kind === "unknown" ? "unclassified" : "type", kind], ["plan", plan],
+  ];
+  if (account.kind === "subscription" || account.kind === "plan") {
+    const until = account.until === null || account.until === undefined ? null : new Date(account.until);
+    tags.push([
+      "expiry",
+      until ? `到期 ${until.toLocaleDateString("zh-CN", { year: "numeric", month: "2-digit", day: "2-digit" })}` : "到期 未提供",
+      until ? `当前付费周期结束时间：${until.toLocaleString("zh-CN")}` : "供应商未提供订阅到期时间，额度重置时间不代表订阅到期时间",
+    ]);
+  }
+  tags.push(["", account.from]);
+  const card = cardBase(account, tags);
   const metrics = node("dl", "metrics");
   for (const window of account.windows) {
     if (/^image[\s_-]*generation$/i.test(window.name.trim())) continue;

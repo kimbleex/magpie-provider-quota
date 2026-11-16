@@ -43,6 +43,23 @@ test("Kiro 积分和常见旧版订阅保留在订阅分区", () => {
   assert.equal(kiro.windows[0].unit, "credits");
 });
 
+test("保留付费周期结束时间，不以额度重置或凭证期限推算订阅有效期", () => {
+  const until = Date.parse("2026-12-16T08:00:00Z");
+  const report = buildReport([
+    { provider: "codex", user: "auto", until: "2026-12-16T08:00:00Z", renew: "auto" },
+    { provider: "vendor", kind: "plan", user: "off", until: until / 1000, renew: "off" },
+    { provider: "codex", user: "numeric", until },
+    { provider: "codex", user: "invalid", until: "not-a-date", renew: "off" },
+    { provider: "codex", user: "missing", expiresAt: until, windows: [{ name: "Weekly", resetsAt: until }] },
+  ]);
+  const accounts = new Map(report.accounts.map((account) => [account.user, account]));
+  assert.equal(accounts.get("auto").until, until);
+  assert.equal(accounts.get("off").until, until);
+  assert.equal(accounts.get("numeric").until, until);
+  assert.equal(accounts.get("invalid").until, null);
+  assert.equal(accounts.get("missing").until, null);
+});
+
 test("Magpie 类型优先，任何插件订阅与密钥套餐都展示全部窗口", () => {
   const report = buildReport([
     { provider: "plugin:future-service", kind: "subscription", user: "future", windows: [

@@ -98,6 +98,7 @@ h1 { margin: 0; font-size: 22px; font-weight: 650; letter-spacing: -.3px; line-h
 .tag { display: inline-flex; align-items: center; gap: 5px; height: 20px; padding: 0 7px; border-radius: 6px; background: var(--chip); color: var(--fg-2); font-size: 11px; font-weight: 500; white-space: nowrap; }
 .tag.channel::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: hsl(var(--channel-hue) 65% 52%); }
 .tag.plan { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
+.tag.expiry { font-variant-numeric: tabular-nums; }
 .tag.type { color: var(--ok); background: color-mix(in srgb, var(--ok) 10%, transparent); }
 .tag.unclassified { color: var(--warning); background: color-mix(in srgb, var(--warning) 10%, transparent); }
 .freshness { flex: none; display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; margin-top: 2px; color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; white-space: nowrap; cursor: default; }
