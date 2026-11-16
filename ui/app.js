@@ -110,21 +110,19 @@ function value(text, className = "") {
 }
 
 function cardBase(account, tags) {
-  const name = account.name === account.provider ? channelName(account.provider) : account.name || account.user;
+  const name = account.user && account.user !== "未命名账号" ? account.user
+    : account.name === account.provider ? channelName(account.provider) : account.name || account.user;
   const stale = account.error || account.readAt === null || Date.now() - account.readAt > 300000;
   const card = node("article", stale ? "card stale" : "card");
-  card.style.setProperty("--hue", hue(name));
   card.style.setProperty("--channel-hue", hue(account.provider || name));
 
   const head = node("header", "card-head");
-  const avatar = node("div", "avatar", [...name.replace(/^[^\p{L}\p{N}]+/u, "")][0] ?? "?");
-  avatar.setAttribute("aria-hidden", "true");
   const identity = node("div", "identity");
   const title = node("h3", "account-name", name);
   title.title = name;
   const tagList = node("div", "tags");
   for (const [className, text] of tags) if (text) tagList.append(node("span", `tag ${className}`, text));
-  identity.append(title, tagList);
+  identity.append(title);
 
   const freshness = node("span", "freshness");
   freshness.title = readingTitle(account);
@@ -138,8 +136,8 @@ function cardBase(account, tags) {
     if (stale) freshness.classList.add("stale");
     freshness.textContent = ago(account.readAt);
   }
-  head.append(avatar, identity, freshness);
-  card.append(head);
+  head.append(identity, freshness);
+  card.append(head, tagList);
   return card;
 }
 

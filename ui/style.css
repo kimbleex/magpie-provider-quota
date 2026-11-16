@@ -15,8 +15,6 @@
   --warning: #c08a2d;
   --danger: #d0585c;
   --accent: #7253da;
-  --avatar-l: 94%;
-  --avatar-fg-l: 38%;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", sans-serif;
   -webkit-font-smoothing: antialiased;
 }
@@ -37,8 +35,6 @@
   --warning: #d9a952;
   --danger: #e57c7f;
   --accent: #ae96ff;
-  --avatar-l: 24%;
-  --avatar-fg-l: 78%;
 }
 * { box-sizing: border-box; }
 body { min-height: 100vh; margin: 0; background: radial-gradient(1000px 360px at 12% -120px, color-mix(in srgb, var(--accent) 9%, transparent), transparent 70%), var(--bg); color: var(--fg); font-size: 14px; line-height: 1.5; }
@@ -96,7 +92,6 @@ h1 { margin: 0; font-size: 22px; font-weight: 650; letter-spacing: -.3px; line-h
 .card { display: flex; flex-direction: column; min-width: 0; padding: 18px 20px 20px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow); transition: box-shadow .2s, border-color .2s, transform .2s; }
 .card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-hover); transform: translateY(-1px); }
 .card-head { display: flex; align-items: center; gap: 12px; min-width: 0; }
-.avatar { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 11px; background: hsl(var(--hue) 70% var(--avatar-l)); color: hsl(var(--hue) 55% var(--avatar-fg-l)); font-size: 15px; font-weight: 650; text-transform: uppercase; }
 .identity { flex: 1; min-width: 0; }
 .account-name { margin: 0; font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.35; }
 .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
