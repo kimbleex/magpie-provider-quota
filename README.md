@@ -34,6 +34,10 @@ magpie plugin add ./magpie-provider-quota
 Kiro 的订阅积分属于订阅额度，有金额或积分字段也不会因此被误分为 API。
 同一供应商的订阅、密钥套餐和余额，以及不同远端 Magpie 的账号分别保留。
 
+卡片以账号邮箱为标题，不展示头像。订阅与套餐使用 Magpie 返回的 `until`（当前付费周期结束时间），
+在套餐标签后展示「到期 YYYY/MM/DD」标签，鼠标悬浮可查看完整时间；供应商未提供日期时显示「到期 未提供」。
+额度窗口的重置时间和登录凭证有效期不作为订阅到期时间。
+
 页面只能显示 Magpie 已接入并返回的额度，不能发现尚未接入的订阅，
 也不能从第三方中转 API Key 推算其背后的订阅额度。
 Codex 窗口属于 Codex 使用额度，不是 ChatGPT 网页聊天各模型的消息上限。
@@ -83,7 +87,7 @@ npm start
 npm test
 ```
 
-`artifacts/light.png`、`dark.png` 和 `mobile.png` 是使用演示账号生成的界面预览，不含真实账号数据。
+`artifacts/light.png` 和 `artifacts/dark.png` 是使用演示账号生成的桌面界面预览，不含真实账号数据。
 发布时在项目根目录执行 `npm pack --pack-destination artifacts` 更新发布包，
 当前版本的文件名为 `magpie-provider-quota-0.3.0.tgz`。
 
