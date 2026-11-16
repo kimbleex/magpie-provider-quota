@@ -89,7 +89,7 @@ npm test
 
 `artifacts/light.png` 和 `artifacts/dark.png` 是使用演示账号生成的桌面界面预览，不含真实账号数据。
 发布时在项目根目录执行 `npm pack --pack-destination artifacts` 更新发布包，
-当前版本的文件名为 `magpie-provider-quota-0.3.0.tgz`。
+当前版本的文件名为 `magpie-provider-quota-0.5.0.tgz`。
 
 在完整源码中运行。发布包无第三方依赖，由 Magpie 的 Bun 插件宿主运行，无需执行 `npm install`。
 
