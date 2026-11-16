@@ -1,0 +1,28 @@
+{
+  "name": "magpie-provider-quota",
+  "version": "0.3.0",
+  "description": "统一查看 Magpie 中的订阅额度、密钥套餐与 API 余额，支持各服务的周期、积分和请求数。",
+  "type": "module",
+  "main": "./index.mjs",
+  "files": ["index.mjs", "serve.mjs", "lib", "page", "ui", "README.md", "DEPLOY.md"],
+  "scripts": {
+    "start": "node serve.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": ["magpie", "magpie-page", "magpie-plugin", "subscription", "quota", "kiro", "claude", "chatgpt"],
+  "magpie": {
+    "name": "Provider Quota",
+    "page": {
+      "title": "Provider Quota",
+      "titles": { "zh": "账号额度" },
+      "file": "page/index.html",
+      "icon": "page/icon.svg",
+      "service": { "port": 3497, "option": "port" }
+    },
+    "options": { "port": 3497 },
+    "permissions": []
+  }
+}
