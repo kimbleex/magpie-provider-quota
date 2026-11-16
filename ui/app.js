@@ -2,7 +2,7 @@ const base = new URL(".", document.currentScript.src);
 const pageKey = document.querySelector('meta[name="page-key"]').content;
 const elements = Object.fromEntries(
   ["refresh", "status", "accounts", "accounts-count", "empty", "api-section", "api-accounts", "api-count",
-    "stat-total", "stat-ready", "stat-low", "stat-api", "provider-filters", "other-section", "other-accounts", "other-count"]
+    "provider-filters", "other-section", "other-accounts", "other-count"]
     .map((id) => [id, document.getElementById(id)]),
 );
 document.documentElement.dataset.theme = new URLSearchParams(location.search).get("theme")
@@ -158,6 +158,7 @@ function quotaCard(account) {
   ]);
   const metrics = node("dl", "metrics");
   for (const window of account.windows) {
+    if (/^image[\s_-]*generation$/i.test(window.name.trim())) continue;
     const remaining = window.remaining;
     const windowName = window.name.trim().toLowerCase();
     const label = ["5h", "5 hours", "5 hour", "5-hour limit"].includes(windowName) ? "5 小时"
@@ -235,20 +236,6 @@ function setStatus(text, className, title = "") {
   elements.status.title = title;
 }
 
-function renderOverview(accounts, apiAccounts) {
-  const ready = accounts.filter((account) => {
-    const windows = account.windows.filter((window) => !window.text);
-    return !account.error && account.readAt !== null && Date.now() - account.readAt <= 300000
-      && windows.length && windows.every((window) => window.unlimited || (window.remaining !== null && window.remaining > 20));
-  }).length;
-  const low = accounts.filter((account) => account.windows.some((window) => window.remaining !== null && window.remaining <= 20)).length;
-  elements["stat-total"].textContent = accounts.length;
-  elements["stat-ready"].replaceChildren(String(ready), node("small", "", `/ ${accounts.length}`));
-  elements["stat-low"].textContent = low;
-  elements["stat-low"].classList.toggle("alert", low > 0);
-  elements["stat-api"].textContent = apiAccounts.length;
-}
-
 function renderAccounts() {
   const matches = (account) => !selectedProvider || account.provider === selectedProvider;
   const accounts = currentReport.accounts.filter(matches);
@@ -288,8 +275,6 @@ function renderFilters(report) {
 
 function render(report) {
   currentReport = report;
-  const apiAccounts = report.apiAccounts ?? [];
-  renderOverview(report.accounts, apiAccounts);
   renderFilters(report);
   renderAccounts();
   const time = new Date(report.generatedAt ?? Date.now()).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" });

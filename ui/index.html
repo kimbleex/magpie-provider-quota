@@ -18,7 +18,16 @@
           </svg>
         </div>
         <div class="heading">
-          <h1>账号额度</h1>
+          <div class="heading-title">
+            <h1>账号额度</h1>
+            <span class="heading-help">
+              <button class="help-button" type="button" aria-label="查看额度同步说明" aria-describedby="quota-help">?</button>
+              <span id="quota-help" class="help-tooltip" role="tooltip">
+                <strong>接入后自动同步</strong>
+                <span>在 Magpie 中接入订阅并取得额度读数后，这里每 60 秒自动读取。按账号类型分类，按各服务实际返回的周期、积分或请求数展示。</span>
+              </span>
+            </span>
+          </div>
           <p class="subtitle">所有已接入的订阅、套餐与 API 余额，一处查看</p>
         </div>
       </div>
@@ -33,16 +42,6 @@
         </button>
       </div>
     </header>
-    <dl id="overview" class="overview" aria-label="概览">
-      <div class="stat"><dt>订阅与套餐</dt><dd id="stat-total">—</dd></div>
-      <div class="stat ok" title="5 分钟内有读数、无错误，且所有可量化窗口剩余超过 20% 或不限量"><dt>额度充足</dt><dd id="stat-ready">—</dd></div>
-      <div class="stat warn" title="至少一个额度窗口剩余不超过 20%，以最近读数为准"><dt>额度偏低</dt><dd id="stat-low">—</dd></div>
-      <div class="stat"><dt>API 账户</dt><dd id="stat-api">—</dd></div>
-    </dl>
-    <aside class="sync-note">
-      <span class="sync-label">接入后自动同步</span>
-      <p>在 Magpie 中接入订阅并取得额度读数后，这里每 60 秒自动读取。按账号类型分类，按各服务实际返回的周期、积分或请求数展示。</p>
-    </aside>
     <nav id="provider-filters" class="provider-filters" aria-label="按渠道筛选"></nav>
     <section class="section" aria-labelledby="accounts-title">
       <h2 id="accounts-title" class="section-title">
