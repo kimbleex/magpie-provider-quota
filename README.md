@@ -7,6 +7,8 @@
 按各服务实际返回的小时、每日、每周、每月、模型池、积分或请求数展示。
 支持 Magpie 桌面侧边栏、服务器 Magpie Web，以及本机独立运行。
 
+![show](./artifacts/light.png)
+
 ## 安装
 
 ```sh
