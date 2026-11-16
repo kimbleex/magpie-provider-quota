@@ -83,7 +83,6 @@ h1 { margin: 0; font-size: 22px; font-weight: 650; letter-spacing: -.3px; line-h
 .section-title { display: flex; align-items: center; gap: 8px; margin: 0 0 14px; color: var(--fg); font-size: 14px; font-weight: 600; }
 .section-title svg { color: var(--muted); }
 .section-title::after { content: ""; flex: 1; height: 1px; margin-left: 6px; background: linear-gradient(to right, var(--border), transparent); }
-.section-description { margin: -6px 0 16px; color: var(--muted); font-size: 12px; line-height: 1.7; }
 .count { min-width: 20px; padding: 0 7px; border-radius: 10px; background: var(--chip); color: var(--muted); font-size: 11px; font-weight: 500; line-height: 18px; text-align: center; font-variant-numeric: tabular-nums; }
 .count:empty { display: none; }
 .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }

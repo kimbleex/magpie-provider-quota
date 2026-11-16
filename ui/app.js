@@ -174,8 +174,8 @@ function quotaCard(account) {
     if (/^image[\s_-]*generation$/i.test(window.name.trim())) continue;
     const remaining = window.remaining;
     const windowName = window.name.trim().toLowerCase();
-    const label = ["5h", "5 hours", "5 hour", "5-hour limit"].includes(windowName) ? "5 小时"
-      : ["weekly", "week", "7d", "7 days"].includes(windowName) ? "本周" : window.name || "额度";
+    const label = ["5h", "5 hours", "5 hour", "5-hour limit"].includes(windowName) ? "5h剩余额度"
+      : ["weekly", "week", "7d", "7 days"].includes(windowName) ? "周限剩余额度" : window.name || "额度";
     let display = percentage(remaining);
     if (window.unlimited) display = "不限量";
     else if (window.text) display = window.display || "暂无读数";
