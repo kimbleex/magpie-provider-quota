@@ -15,6 +15,7 @@
   "keywords": ["magpie", "magpie-page", "magpie-plugin", "subscription", "quota", "kiro", "claude", "chatgpt"],
   "magpie": {
     "name": "Provider Quota",
+    "icon": "https://raw.githubusercontent.com/kimbleex/magpie-provider-quota/main/artifacts/logo.png",
     "page": {
       "title": "Provider Quota",
       "titles": { "zh": "账号额度" },
