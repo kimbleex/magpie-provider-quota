@@ -305,7 +305,7 @@ async function refresh(force = false) {
     if (force) url.searchParams.set("refresh", "1");
     const response = await fetch(url, {
       headers: { "x-provider-quota-key": pageKey },
-      signal: AbortSignal.timeout(15000),
+      signal: AbortSignal.timeout(force ? 25000 : 15000),
     });
     const report = await response.json();
     if (!response.ok) throw new Error(report.error || `HTTP ${response.status}`);

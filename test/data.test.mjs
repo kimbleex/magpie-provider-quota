@@ -230,20 +230,29 @@ test("从网关读取，连续请求复用缓存，手动刷新绕过缓存", as
   context.after(() => rm(directory, { recursive: true, force: true }));
   await writeFile(join(directory, "plugins.json"), "{}");
   await writeFile(join(directory, "gateway.json"), JSON.stringify({ addr: "127.0.0.1:4321" }));
-  let requests = 0;
+  const requests = [];
   const read = createReader({
     configDir: directory,
     fetchImpl: async (url) => {
-      requests++;
-      assert.equal(url.href, "http://127.0.0.1:4321/v1/magpie/quotas?kept=1");
-      return { ok: true, json: async () => ({ data: [{ provider: "codex", windows: [] }] }) };
+      requests.push(url.href);
+      const remaining = url.search ? 80 : 65;
+      return { ok: true, json: async () => ({ data: [
+        { provider: "codex", windows: [{ name: "5h", remaining }] },
+        { provider: "vendor", kind: "balance", balance: url.search ? "$10" : "$8" },
+      ] }) };
     },
   });
   assert.equal((await read()).source, "gateway");
   await read();
-  assert.equal(requests, 1);
-  await read({ force: true });
-  assert.equal(requests, 2);
+  const [report, concurrent] = await Promise.all([read({ force: true }), read({ force: true })]);
+  assert.equal(concurrent, report);
+  assert.equal(report.accounts[0].fiveHour[0].remaining, 65);
+  assert.equal(report.apiAccounts[0].balance, "$8");
+  assert.equal(await read(), report);
+  assert.deepEqual(requests, [
+    "http://127.0.0.1:4321/v1/magpie/quotas?kept=1",
+    "http://127.0.0.1:4321/v1/magpie/quotas",
+  ]);
 });
 
 test("网关故障时标注快照，保留供应商原始读取时间", async (context) => {
