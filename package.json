@@ -36,7 +36,7 @@
   },
   "magpie": {
     "name": "Provider Quota",
-    "icon": "https://raw.githubusercontent.com/kimbleex/magpie-provider-quota/main/artifacts/logo_0.5.0.png",
+    "icon": "https://raw.githubusercontent.com/kimbleex/magpie-provider-quota/main/artifacts/logo_v0.5.0.png",
     "page": {
       "title": "Provider Quota",
       "titles": { "zh": "账号额度" },
