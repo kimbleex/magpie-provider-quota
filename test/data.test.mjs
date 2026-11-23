@@ -231,14 +231,19 @@ test("从网关读取，连续请求复用缓存，手动刷新绕过缓存", as
   await writeFile(join(directory, "plugins.json"), "{}");
   await writeFile(join(directory, "gateway.json"), JSON.stringify({ addr: "127.0.0.1:4321" }));
   const requests = [];
+  let refreshed = false;
   const read = createReader({
     configDir: directory,
-    fetchImpl: async (url) => {
-      requests.push(url.href);
-      const remaining = url.search ? 80 : 65;
+    fetchImpl: async (url, options) => {
+      requests.push(`${options.method || "GET"} ${url.href}`);
+      if (url.pathname.endsWith("/refresh") && options.method === "POST") {
+        refreshed = true;
+        return { ok: true, json: async () => ({ data: [] }) };
+      }
       return { ok: true, json: async () => ({ data: [
-        { provider: "codex", windows: [{ name: "5h", remaining }] },
-        { provider: "vendor", kind: "balance", balance: url.search ? "$10" : "$8" },
+        { provider: "codex", windows: [{ name: "5h", remaining: refreshed ? 65 : 80 }] },
+        { provider: "vendor", kind: "plan", windows: [{ name: "Daily", remaining: refreshed ? 40 : 55 }] },
+        { provider: "vendor", kind: "balance", balance: refreshed ? "$8" : "$10" },
       ] }) };
     },
   });
@@ -246,12 +251,14 @@ test("从网关读取，连续请求复用缓存，手动刷新绕过缓存", as
   await read();
   const [report, concurrent] = await Promise.all([read({ force: true }), read({ force: true })]);
   assert.equal(concurrent, report);
-  assert.equal(report.accounts[0].fiveHour[0].remaining, 65);
+  assert.equal(report.accounts.find((account) => account.kind === "subscription").fiveHour[0].remaining, 65);
+  assert.equal(report.accounts.find((account) => account.kind === "plan").windows[0].remaining, 40);
   assert.equal(report.apiAccounts[0].balance, "$8");
   assert.equal(await read(), report);
   assert.deepEqual(requests, [
-    "http://127.0.0.1:4321/v1/magpie/quotas?kept=1",
-    "http://127.0.0.1:4321/v1/magpie/quotas",
+    "GET http://127.0.0.1:4321/v1/magpie/quotas?kept=1",
+    "POST http://127.0.0.1:4321/v1/magpie/quotas/refresh",
+    "GET http://127.0.0.1:4321/v1/magpie/quotas?kept=1",
   ]);
 });
 
@@ -273,6 +280,8 @@ test("网关故障时标注快照，保留供应商原始读取时间", async (c
   assert.match(report.warning, /快照/);
   assert.equal(report.accounts[0].readAt, now);
   assert.equal(report.accounts[0].fiveHour[0].remaining, null);
+  await assert.rejects(read({ force: true }), /额度刷新失败/);
+  assert.equal(await read(), report);
 });
 
 test("旧版快照根据记录键还原插件订阅、密钥套餐与钱包，恢复窗口周期和读数时间", async (context) => {
