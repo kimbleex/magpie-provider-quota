@@ -3,19 +3,30 @@ import assert from "node:assert/strict";
 import { get } from "node:http";
 import { startServer } from "../lib/server.mjs";
 
-test("端口被本插件旧实例占用时复用旧服务", async (context) => {
+test("服务提供启动探针", async (context) => {
   const first = await startServer({ port: 0, reader: async () => ({ accounts: [] }) });
   context.after(() => {
     first.server.closeAllConnections();
     return new Promise((resolve) => first.server.close(resolve));
   });
 
-  const second = await startServer({ port: first.port, reader: async () => ({ accounts: [{ id: "new" }] }) });
+  const response = await fetch(`http://127.0.0.1:${first.port}/api/ping`);
+  assert.deepEqual(await response.json(), { service: "magpie-provider-quota", protocol: 1 });
+});
+
+test("端口被旧实例占用时后台等待端口释放", async (context) => {
+  const first = await startServer({ port: 0, reader: async () => ({ accounts: [] }) });
+  context.after(() => first.close());
+
+  const second = await startServer({ port: first.port, reader: async () => ({ accounts: [] }) });
+  context.after(() => {
+    return second.close();
+  });
   assert.equal(second.port, first.port);
-  assert.equal(second.reused, true);
+  assert.equal(second.listening, false);
+  await first.close();
+  await second.ready;
   assert.equal((await fetch(`http://127.0.0.1:${second.port}/api/ping`)).status, 200);
-  second.server.closeAllConnections();
-  await new Promise((resolve) => second.server.close(resolve));
 });
 
 test("本地页面提供额度接口，校验页面凭证、来源和静态路径", async (context) => {
