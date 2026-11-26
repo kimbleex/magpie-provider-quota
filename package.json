@@ -1,6 +1,6 @@
 {
   "name": "magpie-provider-quota",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "description": "查看所有供应商订阅的 5h/7d 额度和API余额",
   "type": "module",
   "main": "./index.mjs",
@@ -40,7 +40,7 @@
     "page": {
       "title": "Provider Quota",
       "titles": { "zh": "账号额度" },
-      "file": "page/index.html",
+      "file": "page/quota.html",
       "icon": "page/icon.svg",
       "service": { "port": 3497, "option": "port" }
     },

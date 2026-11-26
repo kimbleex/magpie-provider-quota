@@ -55,9 +55,10 @@ test("本地页面提供额度接口，校验页面凭证、来源和静态路�
   const key = page.body.match(/name="page-key" content="([^"]+)"/)[1];
   assert.ok(key.length >= 32);
   assert.match(page.headers["content-security-policy"], new RegExp(`http://127.0.0.1:${service.port}`));
-  assert.equal((await fetch(`${base}/`)).status, 403);
+  assert.equal((await fetch(`${base}/`, { headers: { "sec-fetch-mode": "cors" } })).status, 403);
   const unauthorized = await fetch(`${base}/api/report`);
   assert.equal(unauthorized.status, 401);
+  assert.equal((await unauthorized.json()).code, "page_session_expired");
   const headers = { "x-provider-quota-key": key, Origin: "null" };
   const response = await fetch(`${base}/api/report?refresh=1`, { headers });
   assert.equal(response.status, 200);
