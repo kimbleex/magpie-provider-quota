@@ -683,6 +683,11 @@ async function refresh(force = false) {
       signal: AbortSignal.timeout(force ? 50000 : 15000),
     });
     const report = await response.json();
+    if (response.status === 401 && report.error === "页面凭证已失效，请重新打开页面") {
+      setStatus("服务已更新，正在重新加载", "warn", "页面服务已重启，正在获取新的访问凭证");
+      setTimeout(() => location.reload(), 50);
+      return;
+    }
     if (!response.ok) throw new Error(report.error || `HTTP ${response.status}`);
     render(report);
   } catch (error) {

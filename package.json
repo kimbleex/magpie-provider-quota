@@ -1,7 +1,7 @@
 {
   "name": "magpie-provider-quota",
-  "version": "0.5.4",
-  "description": "统一查看 Magpie 中的订阅额度、密钥套餐与 API 余额，支持各服务的周期、积分和请求数。",
+  "version": "0.5.5",
+  "description": "查看所有供应商订阅的 5h/7d 额度和API余额",
   "type": "module",
   "main": "./index.mjs",
   "files": [
